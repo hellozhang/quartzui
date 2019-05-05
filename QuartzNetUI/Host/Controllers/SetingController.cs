@@ -13,6 +13,7 @@ namespace Host.Controllers
     public class SetingController : Controller
     {
         static string filePath = "File/Mail.txt";
+        static string refreshIntervalPath = "File/RefreshInterval.json";
 
         static MailEntity mailData = null;
         /// <summary>
@@ -20,6 +21,7 @@ namespace Host.Controllers
         /// </summary>
         /// <param name="mailEntity"></param>
         /// <returns></returns>
+        [HttpPost]
         public async Task<bool> SaveMailInfo([FromBody]MailEntity mailEntity)
         {
             mailData = mailEntity;
@@ -28,9 +30,32 @@ namespace Host.Controllers
         }
 
         /// <summary>
+        /// 保存刷新间隔
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<bool> SaveRefreshInterval([FromBody]RefreshIntervalEntity entity)
+        {
+            await System.IO.File.WriteAllTextAsync(refreshIntervalPath, JsonConvert.SerializeObject(entity));
+            return true;
+        }
+
+        /// <summary>
+        /// 获取
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<RefreshIntervalEntity> GetRefreshInterval()
+        {
+            return JsonConvert.DeserializeObject<RefreshIntervalEntity>(await System.IO.File.ReadAllTextAsync(refreshIntervalPath));
+        }
+
+        /// <summary>
         /// 获取eMail信息
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public async Task<MailEntity> GetMailInfo()
         {
             if (mailData == null)
@@ -40,7 +65,7 @@ namespace Host.Controllers
             }
             return mailData;
         }
-        //string title, string msg, MailEntity mail = null
+        
         /// <summary>
         /// 发送邮件
         /// </summary>
@@ -48,6 +73,7 @@ namespace Host.Controllers
         /// <param name="msg"></param>
         /// <param name="mail"></param>
         /// <returns></returns>
+        [HttpPost]
         public async Task<bool> SendMail([FromBody]SendMailModel model)
         {
             try

@@ -68,8 +68,9 @@ form nz-tag {
   margin-bottom: 3px;
 }
 
-::ng-deep .ant-calendar-picker {
-  width: 100%;
+::ng-deep .ant-calendar-picker,
+::ng-deep [nz-date-picker] {
+  width: 100% !important;
 }
 
 ::ng-deep span.error {
@@ -78,4 +79,8 @@ form nz-tag {
 
 ::ng-deep span.warning {
   color: #faad14;
+}
+
+::ng-deep span.result {
+  color: #0094ff;
 }
